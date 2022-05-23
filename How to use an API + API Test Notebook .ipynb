@@ -1,0 +1,110 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "id": "70cbe983",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from requests import Request, Session\n",
+    "from requests.exceptions import ConnectionError, Timeout, TooManyRedirects\n",
+    "import json\n",
+    "\n",
+    "url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest' \n",
+    "#Original Sandbox Environment: 'https://sandbox-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'\n",
+    "parameters = {\n",
+    "  'start':'1',\n",
+    "  'limit':'5000',\n",
+    "  'convert':'USD'\n",
+    "}\n",
+    "headers = {\n",
+    "  'Accepts': 'application/json',\n",
+    "  'X-CMC_PRO_API_KEY': '0ad53085-1cb2-4eb8-ad9e-3ffbd7e56509',\n",
+    "}\n",
+    "\n",
+    "session = Session()\n",
+    "session.headers.update(headers)\n",
+    "\n",
+    "try:\n",
+    "  response = session.get(url, params=parameters)\n",
+    "  data = json.loads(response.text)\n",
+    "  #print(data)\n",
+    "except (ConnectionError, Timeout, TooManyRedirects) as e:\n",
+    "  print(e)\n",
+    "\n",
+    "#NOTE:\n",
+    "# I had to go in and put \"jupyter notebook --NotebookApp.iopub_data_rate_limit=1e10\"\n",
+    "# Into the Anaconda Prompt to change this to allow to pull data\n",
+    "\n",
+    "# If that didn't work try using the local host URL as shown in the video"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "id": "31bdff98",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "type(data)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "id": "4cbf82ee",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pandas as pd\n",
+    "\n",
+    "\n",
+    "#This allows you to see all the columns, not just like 15\n",
+    "pd.set_option('display.max_columns', None)\n",
+    "#pd.set_option('display.max_rows', None)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "id": "48c3b340",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#This normalizes the data and makes it all pretty in a dataframe\n",
+    "\n",
+    "pd.json_normalize(data['data'])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "d792e388",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.8.8"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
